@@ -19,21 +19,6 @@ def display_image(image):
     cv2.waitKey()
 
 
-def auto_canny(image, sigma=0.33):
-    v = np.median(image)
-    lower = int(max(0, (1.0 - sigma) * v))
-    upper = int(min(255, (1.0 + sigma) * v))
-    edged = cv2.Canny(image, lower, upper)
-    return edged
-
-
-def gaussian_kernel(size, sigma=1):
-    x, y = np.mgrid[-size:size + 1, -size:size + 1]
-    normal = 1 / (2.0 * np.pi * sigma ** 2)
-    g = np.exp(-((x ** 2 + y ** 2) / (2.0 * sigma ** 2))) * normal
-    return g
-
-
 def sobel_filter(image):
     kx = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]], np.float32)
     ky = np.array([[1, 2, 1], [0, 0, 0], [-1, -2, -1]], np.float32)
@@ -176,35 +161,30 @@ def main(image_name, min_radius, max_radius, gaussian_kernel_dimension = 5, lowT
     img_orig = image.copy()
 
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    #display_image(image)
+    display_image(image)
 
-    # gauss = gaussian_kernel(7)
-    # image = cv2.filter2D(image, -1, gauss)
     image = cv2.GaussianBlur(image, (gaussian_kernel_dimension, gaussian_kernel_dimension), 0)
-    #display_image(image)
-
-    # image = auto_canny(image)
-    # display_image(image)
+    display_image(image)
 
     image, theta = sobel_filter(image)
-    #display_image(image)
+    display_image(image)
 
     image = non_max_suppression(image, theta)
-    #display_image(image)
+    display_image(image)
 
     image = threshold(image, lowThresholdRatio, highThresholdRatio)
-    #display_image(image)
+    display_image(image)
 
     image = binary_image(image)
-    #display_image(image)
+    display_image(image)
 
     image, array = voting(image, min_radius, max_radius)
-    #display_image(image)
+    display_image(image)
 
     circles = extract_circles(array)
     draw_circles(circles, img_orig)
 
     cv2.imwrite(image_name.replace("source", "output"), img_orig)
 
-for filename in glob.glob(r"D:\Tanya\NURE\5course\2semester\NumericalMethods\Labs\Lab2\Circle-Hough-Transform\source\test.*"): 
+for filename in glob.glob(r"*"): 
     main(filename, 40, 65, 5, 0.3, 0.5)
