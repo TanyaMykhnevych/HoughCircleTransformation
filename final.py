@@ -161,25 +161,25 @@ def main(image_name, min_radius, max_radius, gaussian_kernel_dimension = 5, lowT
     img_orig = image.copy()
 
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    display_image(image)
+    #display_image(image)
 
     image = cv2.GaussianBlur(image, (gaussian_kernel_dimension, gaussian_kernel_dimension), 0)
-    display_image(image)
+    #display_image(image)
 
     image, theta = sobel_filter(image)
-    display_image(image)
+    #display_image(image)
 
     image = non_max_suppression(image, theta)
-    display_image(image)
+    #display_image(image)
 
     image = threshold(image, lowThresholdRatio, highThresholdRatio)
-    display_image(image)
+    #display_image(image)
 
     image = binary_image(image)
-    display_image(image)
+    #display_image(image)
 
     image, array = voting(image, min_radius, max_radius)
-    display_image(image)
+    #display_image(image)
 
     circles = extract_circles(array)
     draw_circles(circles, img_orig)
@@ -187,4 +187,4 @@ def main(image_name, min_radius, max_radius, gaussian_kernel_dimension = 5, lowT
     cv2.imwrite(image_name.replace("source", "output"), img_orig)
 
 for filename in glob.glob(r"*"): 
-    main(filename, 40, 65, 5, 0.3, 0.5)
+    main(filename, 10, 20, 5, 0.3, 0.5)
